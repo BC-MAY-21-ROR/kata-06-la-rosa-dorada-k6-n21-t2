@@ -1,45 +1,48 @@
-class GildedRose
+# frozen_string_literal: true
 
+# Class gildedrose to administrate items quality and sellIn
+class GildedRose
   def initialize(items)
     @items = items
   end
 
   def name_checker(item)
     bonus = 0
-    if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert" and item.name != "Sulfuras, Hand of Ragnaros"
-      if item.quality > 0
-        if item.name != "Conjured Mana Cake"
-          bonus = 1 
-        else
-          bonus = 2 
-        end
+    if (item.name != 'Aged Brie') && (item.name != 'Backstage passes to a TAFKAL80ETC concert') && (item.name != 'Sulfuras, Hand of Ragnaros')
+      if item.quality.positive?
+        bonus = if item.name != 'Conjured Mana Cake'
+                  1
+                else
+                  2
+                end
         downgrade_quality(item, bonus + bonus_sell_in(item))
       end
-    elsif item.name != "Sulfuras, Hand of Ragnaros"
+    elsif item.name != 'Sulfuras, Hand of Ragnaros'
       if item.quality < 50
-        if item.name == "Backstage passes to a TAFKAL80ETC concert"
-          if item.sell_in < 0
+        case item.name
+        when 'Backstage passes to a TAFKAL80ETC concert'
+          if item.sell_in.negative?
             item.quality = 0
             bonus = 0
           else
             bonus = backstage_bonus(item)
           end
-        elsif item.name == "Aged Brie"
+        when 'Aged Brie'
           bonus = 1
         end
-        upgrade_quality(item,bonus)
+        upgrade_quality(item, bonus)
       end
     end
   end
 
-    # if backstage 
-    # 1..1dias bonus = x
-    #if aged brie 
-    # |...| bonus x
-    #upgrade_quality(bonus)
-    #if
-    #
-    #
+  # if backstage
+  # 1..1dias bonus = x
+  # if aged brie
+  # |...| bonus x
+  # upgrade_quality(bonus)
+  # if
+  #
+  #
 
   def upgrade_quality(item, bonus)
     item.quality = item.quality + bonus
@@ -50,27 +53,27 @@ class GildedRose
   end
 
   def bonus_sell_in(item)
-    if item.sell_in < 0
+    if item.sell_in.negative?
       1
-    elsif item.sell_in < 0 && item.name == "Conjured Mana Cake"
+    elsif item.sell_in.negative? && item.name == 'Conjured Mana Cake'
       2
     else
       0
     end
   end
-  
+
   def backstage_bonus(item)
     bonus = 0
     if item.sell_in < 11 && item.sell_in > 6
       bonus += 2
     elsif item.sell_in < 6
-      bonus +=3
+      bonus += 3
     end
     bonus
   end
 
-  def update_quality()
-    @items.each do |item| 
+  def update_quality
+    @items.each do |item|
       item.sell_in = item.sell_in - 1
       name_checker(item)
     end
@@ -125,7 +128,7 @@ class GildedRose
   #                 item.quality = item.quality - 1
   #               else
   #                 item.quality = item.quality - 2
-  #               end 
+  #               end
   #             end
   #           end
   #         else
@@ -141,6 +144,7 @@ class GildedRose
   # end
 end
 
+# Class item to create items with their attributes
 class Item
   attr_accessor :name, :sell_in, :quality
 
@@ -150,7 +154,7 @@ class Item
     @quality = quality
   end
 
-  def to_s()
+  def to_s
     "#{@name}, #{@sell_in}, #{@quality}"
   end
 end

@@ -68,15 +68,15 @@
           </div>
           <div class="code-statistics col-md-11">
             <div class="col-md-3">
-              <div><span class="metric">13</span><small> lines of codes</small></div>
+              <div><span class="metric">22</span><small> lines of codes</small></div>
               <div><span class="metric">0</span><small> methods</small></div>
             </div>
             <div class="col-md-3">
               <div><span class="metric">N/A</span><small> complexity/method</small></div>
-              <div><span class="metric">0</span><small> churn</small></div>
+              <div><span class="metric">1</span><small> churn</small></div>
             </div>
             <div class="col-md-3">
-              <div><span class="metric">14.46</span><small> complexity</small></div>
+              <div><span class="metric">33.34</span><small> complexity</small></div>
               <div><span class="metric">0</span><small> duplications</small></div>
             </div>
           </div>
@@ -98,6 +98,7 @@
     </div>
 
     <code class="prettyprint linenums lang-ruby file-code js-file-code">require File.join(File.dirname(__FILE__), &#39;gilded_rose&#39;)
+require &#39;rspec&#39;
 
 describe GildedRose do
 
@@ -105,7 +106,15 @@ describe GildedRose do
     it &quot;does not change the name&quot; do
       items = [Item.new(&quot;foo&quot;, 0, 0)]
       GildedRose.new(items).update_quality()
-      expect(items[0].name).to eq &quot;fixme&quot;
+      expect(items[0].name).to eq &quot;foo&quot;
+    end
+
+    it &quot;substract from the quality 2 of a normal item&quot; do
+      item = Item.new(&quot;+5 Dexterity Vest&quot;,0,5)
+      items = Array.new
+      items &lt;&lt; item
+      GildedRose.new(items).update_quality()
+      expect(items[0].quality).to eq(3)
     end
   end
 
